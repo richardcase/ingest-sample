@@ -1,0 +1,64 @@
+run:
+  concurrency: 4
+  deadline: 5m
+  tests: false
+
+  skip-dirs:
+    - ^pkg\/repository\/mocks
+    - ^pkg\/api\/mocks
+    - vendor$
+
+output:
+  format: tab
+  print-issued-lines: true
+  print-linter-name: true
+
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  gofmt:
+    simplify: true
+  gocyclo:
+    min-complexity: 20
+  maligned:
+    suggest-new: true
+  misspell:
+    locale: UK
+  lll:
+    line-length: 160
+  unused:
+    check-exported: false
+
+linters:
+  enable:
+    - deadcode
+    - golint
+    - govet
+    - gosimple
+    - interfacer
+    - lll
+    - misspell
+    - staticcheck
+    - structcheck
+    - ineffassign
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - errcheck
+    - goconst
+    - megacheck
+  disable:
+    - goimports
+    - gocritic
+    - prealloc
+    - typecheck
+    - nakedret
+    - scopelint
+    - gochecknoglobals
+    - gochecknoinits
+    - gosec
+      # start here to enable back all gometalinter linters
+    - maligned
+  fast: false

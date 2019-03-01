@@ -1,0 +1,36 @@
+syntax = "proto3";
+package api;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+message Person {
+    int64 pid = 1;
+    string name = 2;
+    string email = 3;
+    string mobile_number = 4;
+    google.protobuf.Timestamp created = 5;
+    google.protobuf.Timestamp updated = 6;
+}
+
+message PersonSummary {
+    int32 person_count = 1;
+    int32 elapsed_time = 2;
+}
+
+message GetPersonRequest {
+    int64 id = 1;
+}
+
+message DeletePersonRequest {
+    int64 id = 1;
+}
+
+service PersonService {
+    rpc GetByID(GetPersonRequest) returns (Person) {}
+    rpc Store(stream Person) returns (PersonSummary) {}
+    rpc Delete(DeletePersonRequest) returns (google.protobuf.Empty) {}
+}
+
+
+

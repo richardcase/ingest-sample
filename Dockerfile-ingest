@@ -1,0 +1,29 @@
+########## Build ###################
+
+FROM golang:1.11.2-alpine3.8 as builder
+
+ENV PACKAGES="\
+    curl \
+    build-base \
+    git \
+"
+
+ENV GO111MODULE=on
+
+RUN apk update && apk add --no-cache $PACKAGES
+
+COPY . $GOPATH/src/github.com/richardcase/ingest-sample/
+WORKDIR $GOPATH/src/github.com/richardcase/ingest-sample/
+
+RUN hack/install-build-deps.sh
+RUN make ci && make release
+
+
+########## Output Image ###################
+FROM scratch
+
+COPY --from=builder /go/bin/ingest-svc /app/ingest-svc
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/ingest-svc"]
