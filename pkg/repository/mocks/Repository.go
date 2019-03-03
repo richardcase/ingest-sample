@@ -24,13 +24,13 @@ func (_m *Repository) Check() bool {
 	return r0
 }
 
-// Delete provides a mock function with given fields: id
-func (_m *Repository) Delete(id int64) error {
-	ret := _m.Called(id)
+// Delete provides a mock function with given fields: pid
+func (_m *Repository) Delete(pid int64) error {
+	ret := _m.Called(pid)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(int64) error); ok {
-		r0 = rf(id)
+		r0 = rf(pid)
 	} else {
 		r0 = ret.Error(0)
 	}

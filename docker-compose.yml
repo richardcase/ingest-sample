@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  mongo:
+    image: "mongo:latest"
+    ports:
+     - "27017:27017"
+#    networks:
+#      - ingest-backend
+
+  person-svc:
+    build:
+      context: ./
+      dockerfile: Dockerfile-personsvc
+    ports:
+      - "7777:7777"
+    command:
+      - "-l"
+      - "debug"
+      - "--dburl"
+      - "mongodb://mongo:27017"
+      - "--listen-address"
+      - "person-svc:7777"
+#    networks:
+#      - ingest-backend
+#      - ingest-frontend
+    depends_on: 
+      - mongo
+  ingest:
+    build:
+      context: ./
+      dockerfile: Dockerfile-ingest
+    volumes:
+        - ${PWD}/data/data.csv:/app/data.csv
+    command:
+      - "-l"
+      - "debug"
+      - "-w"
+      - "1"
+      - "-s"
+      - "/app/data.csv"
+      - "--service-address"
+      - "person-svc:7777"
+#    networks:
+#      - ingest-frontend
+#    depends_on: 
+#      - person-svc
+
+#networks:
+#  ingest-backend:
+#    external: false
+#  ingest-frontend:
+#    external: true
+

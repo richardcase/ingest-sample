@@ -11,5 +11,35 @@
             "mode": "test",
             "program": "${workspaceFolder}/pkg/controller/person"
         },
+        {
+            "name": "Launch ingest",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/ingest-svc",
+            "env": {},
+            "args": [
+                "-l",
+                "debug",
+                "-s",
+                "${workspaceFolder}/data/data.csv",
+                "-w",
+                "1"
+            ]
+        },
+        {
+            "name": "Launch person svc",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/person-svc",
+            "env": {},
+            "args": [
+                "-l",
+                "debug",
+                "--dburl",
+                "mongodb://localhost:27017"
+            ]
+        }
     ]
 }

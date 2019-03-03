@@ -3,7 +3,7 @@ package mongodb
 import (
 	"context"
 
-	"github.com/globalsign/mgo/bson"
+	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/mongodb/mongo-go-driver/mongo/options"
 	"github.com/pkg/errors"
@@ -35,12 +35,11 @@ func NewRepository(database string, collection string, uri string, opts ...*opti
 	}, nil
 }
 
-func (r *Repository) GetByID(pid int64) (*api.Person, error) {
-	//nolint
-	filter := bson.D{{"pid", pid}}
+func (r *Repository) GetByID(id int64) (*api.Person, error) {
+	filter := bson.D{{Key: "_id", Value: id}}
 	result := r.collection.FindOne(context.TODO(), filter)
 	if result.Err() != nil {
-		return nil, errors.Wrapf(result.Err(), "getting person with id %d", pid)
+		return nil, errors.Wrapf(result.Err(), "getting person with id %d", id)
 	}
 
 	raw, err := result.DecodeBytes()
@@ -48,7 +47,7 @@ func (r *Repository) GetByID(pid int64) (*api.Person, error) {
 		if err == mongo.ErrNoDocuments {
 			return nil, nil
 		}
-		return nil, errors.Wrapf(err, "decoding bson for id %d", pid)
+		return nil, errors.Wrapf(err, "decoding bson for id %d", id)
 	}
 	person := mapRawBsonToPerson(raw)
 
@@ -59,35 +58,33 @@ func (r *Repository) GetByID(pid int64) (*api.Person, error) {
 func (r *Repository) Store(person *api.Person) error {
 	mapped := mapPersonToBson(person)
 
-	existing, err := r.GetByID(person.Pid)
+	existing, err := r.GetByID(person.Id)
 	if err != nil {
-		return errors.Wrapf(err, "checking if person already exists %d", person.Pid)
+		return errors.Wrapf(err, "checking if person already exists %d", person.Id)
 	}
 
 	if existing != nil {
-		//nolint
-		filter := bson.D{{"pid", person.Pid}}
+		filter := bson.D{{Key: "_id", Value: person.Id}}
 		result := r.collection.FindOneAndReplace(context.TODO(), filter, mapped)
 		if result.Err() != nil {
-			return errors.Wrapf(result.Err(), "updating person with id %d", person.Pid)
+			return errors.Wrapf(result.Err(), "updating person with id %d", person.Id)
 		}
 	} else {
 		_, err := r.collection.InsertOne(context.TODO(), mapped)
 		if err != nil {
-			return errors.Wrapf(err, "inserting new person %d", person.Pid)
+			return errors.Wrapf(err, "inserting new person %d", person.Id)
 		}
 	}
 
 	return nil
 }
 
-func (r *Repository) Delete(pid int64) error {
-	//nolint
-	filter := bson.D{{"pid", pid}}
+func (r *Repository) Delete(id int64) error {
+	filter := bson.D{{Key: "_id", Value: id}}
 
 	result := r.collection.FindOneAndDelete(context.TODO(), filter)
 	if result.Err() != nil {
-		return errors.Wrapf(result.Err(), "finding & deleting person with id %d", pid)
+		return errors.Wrapf(result.Err(), "finding & deleting person with id %d", id)
 	}
 
 	return nil

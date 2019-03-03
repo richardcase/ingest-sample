@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	DefaultServiceAddress = "127.0.0.1:7777"
+	DefaultServiceAddress = "localhost:7777"
 	DefaultLogLevel       = "Info"
 )
 
@@ -60,6 +60,8 @@ func doRun() error {
 	if serviceAddress == "" {
 		logger.Fatal("you must supply the address of the person service")
 	}
+	logger.Info("Starting ingest")
+	logger.Infof("Service address: %s", serviceAddress)
 
 	stopChan := signal.SetupSignalHandler()
 

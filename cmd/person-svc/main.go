@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	DefaultListenAddress = ":7777"
+	DefaultListenAddress = "localhost:7777"
 	DefaultLogLevel      = "Info"
 	DefaultDbName        = "ingest"
 	DefaultCollName      = "people"
@@ -101,6 +101,8 @@ func doRun() error {
 }
 
 func init() {
+	options = &Options{}
+
 	rootCmd.PersistentFlags().StringVar(&options.ConfigFile, "config", "", "Confile file (default is $HOME/.person-svc.yaml")
 	rootCmd.PersistentFlags().StringVarP(&options.LogLevel, "loglevel", "l", DefaultLogLevel, "Log level for the service")
 	rootCmd.PersistentFlags().StringVarP(&options.ListenAddress, "listen-address", "", DefaultListenAddress, "the address the http server should listen on")

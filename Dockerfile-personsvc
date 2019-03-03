@@ -24,6 +24,6 @@ FROM scratch
 
 COPY --from=builder /go/bin/person-svc /app/person-svc
 
-EXPOSE 8080
+EXPOSE 7777
 
 ENTRYPOINT ["/app/person-svc"]

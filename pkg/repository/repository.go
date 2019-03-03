@@ -5,7 +5,7 @@ import (
 )
 
 type Repository interface {
-	GetByID(pid int64) (*api.Person, error)
+	GetByID(id int64) (*api.Person, error)
 	Store(person *api.Person) error
 	Delete(id int64) error
 	Check() bool

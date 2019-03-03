@@ -30,7 +30,7 @@ func MapToPerson() Processor {
 				//TODO: handle errors, error channel??
 				panic(err.Error())
 			}
-			person.Pid = val
+			person.Id = val
 			person.Name = rec.Get("name").(string)
 			person.Email = rec.Get("email").(string)
 			person.MobileNumber = rec.Get("mobile_number").(string)

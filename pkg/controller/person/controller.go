@@ -59,7 +59,8 @@ func (c *Controller) Store(stream api.PersonService_StoreServer) error {
 
 		err = c.repo.Store(person)
 		if err != nil {
-			return errors.Wrapf(err, "saving person with id %d", person.Pid)
+			c.logger.WithError(err).Error("error storing person")
+			return errors.Wrapf(err, "saving person with id %d", person.Id)
 		}
 		personCount++
 	}
