@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/richardcase/ingest-sample.svg?style=svg)](https://circleci.com/gh/richardcase/ingest-sample) [![Coverage Status](https://coveralls.io/repos/github/richardcase/ingest-sample/badge.svg?branch=master)](https://coveralls.io/github/richardcase/ingest-sample?branch=master) ![Go Report Card](https://goreportcard.com/badge/github.com/richardcase/ingest-sample)
+
 # Ingest Sample
 
 This is a sample that implements an ingest solution.
