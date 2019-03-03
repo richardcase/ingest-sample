@@ -24,13 +24,13 @@ func (_m *Repository) Check() bool {
 	return r0
 }
 
-// Delete provides a mock function with given fields: pid
-func (_m *Repository) Delete(pid int64) error {
-	ret := _m.Called(pid)
+// Delete provides a mock function with given fields: id
+func (_m *Repository) Delete(id int64) error {
+	ret := _m.Called(id)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(int64) error); ok {
-		r0 = rf(pid)
+		r0 = rf(id)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -38,13 +38,13 @@ func (_m *Repository) Delete(pid int64) error {
 	return r0
 }
 
-// GetByID provides a mock function with given fields: pid
-func (_m *Repository) GetByID(pid int64) (*api.Person, error) {
-	ret := _m.Called(pid)
+// GetByID provides a mock function with given fields: id
+func (_m *Repository) GetByID(id int64) (*api.Person, error) {
+	ret := _m.Called(id)
 
 	var r0 *api.Person
 	if rf, ok := ret.Get(0).(func(int64) *api.Person); ok {
-		r0 = rf(pid)
+		r0 = rf(id)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*api.Person)
@@ -53,7 +53,7 @@ func (_m *Repository) GetByID(pid int64) (*api.Person, error) {
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(pid)
+		r1 = rf(id)
 	} else {
 		r1 = ret.Error(1)
 	}

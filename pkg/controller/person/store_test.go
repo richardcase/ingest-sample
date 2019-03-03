@@ -24,11 +24,13 @@ var _ = Describe("Store Person", func() {
 		logger   *logrus.Entry
 		person   *api.Person
 		stream   *apimocks.PersonService_StoreServer
+		valid    controller.Validator
 	)
 
 	BeforeEach(func() {
 		personId = 43
 		logger = getTestLogger()
+		valid = &controller.PersonValidator{}
 	})
 
 	Describe("when calling Store", func() {
@@ -46,7 +48,7 @@ var _ = Describe("Store Person", func() {
 				r = &mocks.Repository{}
 				r.On("Store", -1).Return(nil, nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				err = ctl.Store(stream)
 			})
 
@@ -95,7 +97,7 @@ var _ = Describe("Store Person", func() {
 				r = &mocks.Repository{}
 				r.On("Store", person).Return(nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				err = ctl.Store(stream)
 			})
 
@@ -126,7 +128,7 @@ var _ = Describe("Store Person", func() {
 				r = &mocks.Repository{}
 				r.On("Store", person).Return(nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				err = ctl.Store(stream)
 			})
 
@@ -156,7 +158,7 @@ var _ = Describe("Store Person", func() {
 				r = &mocks.Repository{}
 				r.On("Store", person).Return(errors.New("datastore error"))
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				err = ctl.Store(stream)
 			})
 

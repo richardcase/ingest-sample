@@ -21,10 +21,14 @@ import (
 )
 
 const (
+	// DefaultListenAddress is the default address for the service to listen on
 	DefaultListenAddress = "localhost:7777"
-	DefaultLogLevel      = "Info"
-	DefaultDbName        = "ingest"
-	DefaultCollName      = "people"
+	// DefaultLogLevel is the default log level
+	DefaultLogLevel = "Info"
+	// DefaultDbName is the default database name
+	DefaultDbName = "ingest"
+	// DefaultCollName is the default collection name
+	DefaultCollName = "people"
 )
 
 var (
@@ -66,7 +70,7 @@ func doRun() error {
 		logger.WithError(err).Fatal("error creating Mongo repository")
 	}
 
-	controller := controller.New(repo, logger)
+	controller := controller.New(repo, logger, &controller.PersonValidator{})
 
 	stopChan := signal.SetupSignalHandler()
 

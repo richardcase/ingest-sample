@@ -11,11 +11,13 @@ import (
 	"github.com/richardcase/ingest-sample/pkg/api"
 )
 
+// Repository represents a MongoDb backed repository of People
 type Repository struct {
 	client     *mongo.Client
 	collection *mongo.Collection
 }
 
+// NewRepository create a new instance of the MongoDB Repository
 func NewRepository(database string, collection string, uri string, opts ...*options.ClientOptions) (*Repository, error) {
 	client, err := mongo.Connect(context.TODO(), uri, opts...)
 	if err != nil {
@@ -35,6 +37,7 @@ func NewRepository(database string, collection string, uri string, opts ...*opti
 	}, nil
 }
 
+// GetByID will retrieve a person from MongoDb given an ID
 func (r *Repository) GetByID(id int64) (*api.Person, error) {
 	filter := bson.D{{Key: "_id", Value: id}}
 	result := r.collection.FindOne(context.TODO(), filter)
@@ -55,6 +58,7 @@ func (r *Repository) GetByID(id int64) (*api.Person, error) {
 
 }
 
+// Store will insert or update a Person in MongoDb
 func (r *Repository) Store(person *api.Person) error {
 	mapped := mapPersonToBson(person)
 
@@ -79,6 +83,7 @@ func (r *Repository) Store(person *api.Person) error {
 	return nil
 }
 
+// Delete will delete a person record from MongoDb if it exists
 func (r *Repository) Delete(id int64) error {
 	filter := bson.D{{Key: "_id", Value: id}}
 
@@ -90,6 +95,7 @@ func (r *Repository) Delete(id int64) error {
 	return nil
 }
 
+// Check will check the connection to Mongo. Its intended for use in health checks
 func (r *Repository) Check() bool {
 	if r.client == nil {
 		return false

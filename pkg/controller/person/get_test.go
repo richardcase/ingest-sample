@@ -22,11 +22,13 @@ var _ = Describe("Get Person", func() {
 		logger   *logrus.Entry
 		req      *api.GetPersonRequest
 		person   *api.Person
+		valid    controller.Validator
 	)
 
 	BeforeEach(func() {
 		personId = 43
 		logger = getTestLogger()
+		valid = &controller.PersonValidator{}
 	})
 
 	Describe("when calling GetByID", func() {
@@ -36,7 +38,7 @@ var _ = Describe("Get Person", func() {
 				r = &mocks.Repository{}
 				r.On("GetByID", -1).Return(nil, nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.GetPersonRequest{
 					Id: int64(-1),
 				}
@@ -59,7 +61,7 @@ var _ = Describe("Get Person", func() {
 				r = &mocks.Repository{}
 				r.On("GetByID", personId).Return(nil, nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.GetPersonRequest{
 					Id: int64(personId),
 				}
@@ -85,7 +87,7 @@ var _ = Describe("Get Person", func() {
 				repoPerson = createPerson(int64(personId))
 				r.On("GetByID", personId).Return(repoPerson, nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.GetPersonRequest{
 					Id: int64(personId),
 				}
@@ -107,7 +109,7 @@ var _ = Describe("Get Person", func() {
 				r = &mocks.Repository{}
 				r.On("GetByID", personId).Return(nil, errors.New("datastore had an error"))
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.GetPersonRequest{
 					Id: int64(personId),
 				}

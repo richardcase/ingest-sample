@@ -2,7 +2,9 @@
 
 # Ingest Sample
 
-This is a sample that implements an ingest solution.
+This is a sample that implements an ingest solution. This is proof-of-concept and is not  production ready code (see future areas for improvement below).
+
+![ingest](docs/ingest.png)
 
 ## Running Locally
 
@@ -38,13 +40,19 @@ ingest-sample_ingest_1 exited with code 0
 
 ## Omissions & Future Improvement:
 
+To make this production we need to do the following (the list may not be complete):
+
+* [ ] Ingest pipeline needs to handle errors
 * [ ] Convert ingest to a service
 * [ ] Split the services into their own repos
 * [ ] Implement TLS for grpc
-* [ ] Addition unit tests, add integration tests
+* [ ] Additional unit tests - there need to be a bunch more
+* [ ] Integration and e2e tests
 * [ ] Authentication / Authorization
+* [ ] Probes & healthchecks
 * [ ] Metrics
 * [ ] Kubernetes deployment artefacts (i.e. charts)
 * [ ] Skaffold for developing against local Kubernetes
-* Add custom mongo codec to remove raw usage
+* [ ] Add custom mongo codec to remove raw usage
+* [ ] CSV parser assume headers are in the first row
 

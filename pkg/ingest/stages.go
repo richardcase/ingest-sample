@@ -2,22 +2,31 @@ package ingest
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/richardcase/ingest-sample/pkg/api"
+	"github.com/richardcase/ingest-sample/pkg/phone"
 )
 
-func FormatEmail() Processor {
+// FormatPhoneE164 is a processing step that will format a UK
+// phone number as E.164.
+// See https://en.wikipedia.org/wiki/E.164
+func FormatPhoneE164() Processor {
 	return func(in <-chan interface{}, out chan interface{}) {
 		for m := range in {
 			rec := m.(Record)
-			email := rec.Get("email")
-			rec.Put("email", strings.ToUpper(email.(string)))
+			mobile := rec.Get("mobile_number")
+
+			formatter := phone.NewUKToE164Formatter()
+
+			formatted, _ := formatter.Format(mobile.(string))
+
+			rec.Put("mobile_number", formatted)
 			out <- rec
 		}
 	}
 }
 
+// MapToPerson is a processing step that maps a record to Person
 func MapToPerson() Processor {
 	return func(in <-chan interface{}, out chan interface{}) {
 		for m := range in {

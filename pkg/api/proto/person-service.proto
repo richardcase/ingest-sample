@@ -13,7 +13,8 @@ message Person {
 
 message PersonSummary {
     int32 person_count = 1;
-    int32 elapsed_time = 2;
+    int32 error_count = 2;
+    int32 elapsed_time = 3;
 }
 
 message GetPersonRequest {

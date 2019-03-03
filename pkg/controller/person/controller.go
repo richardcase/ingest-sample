@@ -13,19 +13,23 @@ import (
 	"github.com/richardcase/ingest-sample/pkg/repository"
 )
 
+// Controller contains the implementation of the people service
 type Controller struct {
-	logger *logrus.Entry
-	repo   repository.Repository
+	logger    *logrus.Entry
+	repo      repository.Repository
+	validator Validator
 }
 
-func New(repo repository.Repository, logger *logrus.Entry) *Controller {
-
+// New creates a new Controller
+func New(repo repository.Repository, logger *logrus.Entry, validator Validator) *Controller {
 	return &Controller{
-		logger: logger,
-		repo:   repo,
+		logger:    logger,
+		repo:      repo,
+		validator: validator,
 	}
 }
 
+// GetByID returns a Person for a supplied ID
 func (c *Controller) GetByID(ctx context.Context, req *api.GetPersonRequest) (*api.Person, error) {
 	if req.Id < 0 {
 		return nil, errors.New("person id must be 0 or higher")
@@ -37,11 +41,14 @@ func (c *Controller) GetByID(ctx context.Context, req *api.GetPersonRequest) (*a
 	}
 
 	return person, nil
-
 }
 
+// Store will store (upsert) People from a stream into a datastore. When the
+// stream is closed a summary will be returned
 func (c *Controller) Store(stream api.PersonService_StoreServer) error {
 	personCount := 0
+	errorCount := 0
+
 	start := time.Now()
 
 	for {
@@ -50,11 +57,20 @@ func (c *Controller) Store(stream api.PersonService_StoreServer) error {
 			end := time.Now()
 			return stream.SendAndClose(&api.PersonSummary{
 				PersonCount: int32(personCount),
+				ErrorCount:  int32(errorCount),
 				ElapsedTime: int32(end.Sub(start).Seconds()),
 			})
 		}
 		if err != nil {
 			return errors.Wrapf(err, "receiving person from stream")
+		}
+
+		err = c.validator.Validate(person)
+		if err != nil {
+			c.logger.Debugf("error validating person %d: %s", person.Id, err)
+			//TODO: store the error and return
+			errorCount++
+			continue
 		}
 
 		err = c.repo.Store(person)
@@ -66,6 +82,7 @@ func (c *Controller) Store(stream api.PersonService_StoreServer) error {
 	}
 }
 
+// Delete will delete a specific Person given an id
 func (c *Controller) Delete(ctx context.Context, req *api.DeletePersonRequest) (*empty.Empty, error) {
 	if req.Id < 0 {
 		return nil, errors.New("person id must be 0 or higher")

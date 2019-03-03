@@ -17,8 +17,10 @@ import (
 )
 
 const (
+	// DefaultServiceAddress is the default address for the person servive
 	DefaultServiceAddress = "localhost:7777"
-	DefaultLogLevel       = "Info"
+	// DefaultLogLevel is the default log level
+	DefaultLogLevel = "Info"
 )
 
 var (
@@ -109,7 +111,8 @@ func worker(logger *logrus.Entry, serverAddress string, in chan interface{}) err
 	if err != nil {
 		return err
 	}
-	personPipeline := ingest.NewPipeline("ingest-person", client.PersonSvcDestination(), ingest.FormatEmail(), ingest.MapToPerson())
+	//personPipeline := ingest.NewPipeline("ingest-person", ingest.PrintDestination(), ingest.FormatPhoneE164(), ingest.MapToPerson())
+	personPipeline := ingest.NewPipeline("ingest-person", client.PersonSvcDestination(), ingest.FormatPhoneE164(), ingest.MapToPerson())
 	personPipeline.Run(in)
 
 	return nil

@@ -23,11 +23,13 @@ var _ = Describe("Delete Person", func() {
 		logger   *logrus.Entry
 		req      *api.DeletePersonRequest
 		emp      *empty.Empty
+		valid    controller.Validator
 	)
 
 	BeforeEach(func() {
 		personId = 43
 		logger = getTestLogger()
+		valid = &controller.PersonValidator{}
 	})
 
 	Describe("when calling Delete", func() {
@@ -37,7 +39,7 @@ var _ = Describe("Delete Person", func() {
 				r = &mocks.Repository{}
 				r.On("Delete", -1).Return(nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.DeletePersonRequest{
 					Id: int64(-1),
 				}
@@ -57,7 +59,7 @@ var _ = Describe("Delete Person", func() {
 				r = &mocks.Repository{}
 				r.On("Delete", personId).Return(nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.DeletePersonRequest{
 					Id: int64(personId),
 				}
@@ -79,7 +81,7 @@ var _ = Describe("Delete Person", func() {
 				r = &mocks.Repository{}
 				r.On("Delete", personId).Return(nil)
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.DeletePersonRequest{
 					Id: int64(personId),
 				}
@@ -101,7 +103,7 @@ var _ = Describe("Delete Person", func() {
 				r = &mocks.Repository{}
 				r.On("Delete", personId).Return(errors.New("datastore had an error"))
 
-				ctl = controller.New(r, logger)
+				ctl = controller.New(r, logger, valid)
 				req = &api.DeletePersonRequest{
 					Id: int64(personId),
 				}

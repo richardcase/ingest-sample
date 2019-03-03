@@ -1,5 +1,6 @@
 package main
 
+// Options represents the runtime options for the service
 type Options struct {
 	ConfigFile    string
 	ListenAddress string
