@@ -34,7 +34,7 @@ var (
 		Use:   "person-svc",
 		Short: "A sample person service",
 		Long:  "",
-		Run: func(c *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, args []string) {
 			if err := doRun(); err != nil {
 				logrus.Fatalf("error running person service: %s", err.Error())
 			}
