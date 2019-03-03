@@ -31,7 +31,7 @@ var (
 		Use:   "ingest-svc",
 		Short: "A sample ingest service",
 		Long:  "",
-		Run: func(_ *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			if err := doRun(); err != nil {
 				logrus.Fatalf("error running ingest service: %s", err.Error())
 			}
