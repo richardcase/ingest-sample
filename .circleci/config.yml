@@ -14,7 +14,7 @@ jobs:
             go mod vendor
             go get github.com/vektra/mockery/.../
             go get github.com/mattn/goveralls
-            hack/install-dev-deps.sh
+            hack/install-build-deps.sh
       - run:
           name: Run tests & lint
           command: |
